@@ -1,0 +1,51 @@
+version: '3.8'
+services:
+  test-nginx-server:
+    image: nginx
+    container_name: test_nginx_server
+    networks:
+      - test-network
+
+  test-db:
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+    container_name: test_db
+    networks:
+      - test-network
+
+  test-cache:
+    image: redis
+    container_name: test_cache
+    networks:
+      - test-network
+  
+  test-centos-server-1:
+    image: almalinux:latest
+    container_name: test_centos_server_1
+    tty: true
+    networks:
+      - test-network
+  
+  test-centos-server-2:
+    image: almalinux:latest
+    container_name: test_centos_server_2
+    tty: true
+    networks:
+      - test-network
+
+  nw-discovery:
+    build: .
+    networks:
+      - test-network
+    depends_on:
+      - test-centos-server-2
+      - test-centos-server-1
+      - test-cache
+      - test-db
+      - test-nginx-server
+
+networks:
+  test-network:
+    name: test_discovery_network
+    driver: bridge
