@@ -44,6 +44,12 @@ services:
       - test-cache
       - test-db
       - test-nginx-server
+    container_name: nw_discovery
+    volumes:
+      - ./src:/app
+    command: ["bash"]
+    stdin_open: true
+    tty: true
 
 networks:
   test-network:
